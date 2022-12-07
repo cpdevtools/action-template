@@ -26,13 +26,27 @@ export async function initializeFork() {
     throw new Error('Cannot initialize template fork.')
   }
 
+  const owner = context.repo.owner;
+  const repo = context.repo.repo;
+  const path = Path.normalize(packageFile);
+
   const newPkg = pkg['package-template'];
 
+  const result = await octokit.repos.getContent({
+    owner,
+    repo,
+    path
+  });
+
+  console.log('------------------result------------------');
+  console.log(result);
+
   await octokit.repos.createOrUpdateFileContents({
+    owner,
+    repo,
     content:  Buffer.from(JSON.stringify(newPkg, undefined, 2), 'utf-8').toString('base64'),
     message: 'switched to package-template',
-    owner: context.repo.owner,
-    repo: context.repo.repo,
-    path: Path.normalize(packageFile)
+    sha: '',
+    path
   });
 }
