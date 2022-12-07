@@ -1,0 +1,16 @@
+name: Dev Tools Template Generation Action
+description: Version Stuff
+
+inputs:
+  name:
+    description: name
+    required: false
+
+# outputs:
+#   branch:
+#     description: The source branch
+
+
+runs:
+  using: "node16"
+  main: "dist/index.js"
