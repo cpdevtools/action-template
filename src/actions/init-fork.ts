@@ -25,28 +25,30 @@ export async function initializeFork() {
   if (!isUninitializedPackageJson(pkg)) {
     throw new Error('Cannot initialize template fork.')
   }
+  const newPkg = Object.assign({}, pkg, pkg['package-template']) as PackageJson;
+  delete newPkg['package-template'];
+
+
 
   const owner = context.repo.owner;
   const repo = context.repo.repo;
   const path = Path.normalize(packageFile);
 
-  const newPkg = pkg['package-template'];
-
-  const result = await octokit.repos.getContent({
+  const fileDataResult = await octokit.repos.getContent({
     owner,
     repo,
     path
   });
 
-  console.log('------------------result------------------');
-  console.log(result);
+  const fileData = fileDataResult.data as { sha: string };
+  const sha = fileData.sha;
 
   await octokit.repos.createOrUpdateFileContents({
     owner,
     repo,
-    content:  Buffer.from(JSON.stringify(newPkg, undefined, 2), 'utf-8').toString('base64'),
+    content: Buffer.from(JSON.stringify(newPkg, undefined, 2), 'utf-8').toString('base64'),
     message: 'switched to package-template',
-    sha: '',
-    path
+    path,
+    sha,
   });
 }
