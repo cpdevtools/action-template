@@ -2,9 +2,18 @@ name: Dev Tools Template Generation Action
 description: Version Stuff
 
 inputs:
-  name:
-    description: name
+  githubToken:
+    description: The GitHub token used to create an authenticated client
+    default: ${{ github.token }}
     required: false
+  packageFile:
+    description: "The path to the Package file."
+    required: false
+    default: ./package.json
+
+  action:
+    description: "The action to preform. 'init-fork'"
+    required: true
 
 # outputs:
 #   branch:
