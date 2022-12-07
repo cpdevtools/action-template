@@ -25,7 +25,10 @@ export async function initializeFork() {
   if (!isUninitializedPackageJson(pkg)) {
     throw new Error('Cannot initialize template fork.')
   }
-  const newPkg = pkg['package-template'];
+  const newPkg = Object.assign({}, pkg, pkg['package-template']) as PackageJson;
+  delete newPkg['package-template'];
+
+
 
   const owner = context.repo.owner;
   const repo = context.repo.repo;
