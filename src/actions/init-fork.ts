@@ -29,7 +29,7 @@ export async function initializeFork() {
   const newPkg = pkg['package-template'];
 
   await octokit.repos.createOrUpdateFileContents({
-    content: JSON.stringify(newPkg, undefined, 2),
+    content:  Buffer.from(JSON.stringify(newPkg, undefined, 2), 'utf-8').toString('base64'),
     message: 'switched to package-template',
     owner: context.repo.owner,
     repo: context.repo.repo,
