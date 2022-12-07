@@ -4,6 +4,8 @@ import type { PackageJson } from 'type-fest';
 import { Octokit } from '@octokit/rest';
 import { context } from '@actions/github';
 
+import Path from 'path/posix';
+
 type UninitializedPackageJson = PackageJson & {
   'package-template': PackageJson
 }
@@ -31,6 +33,6 @@ export async function initializeFork() {
     message: 'switched to package-template',
     owner: context.repo.owner,
     repo: context.repo.repo,
-    path: packageFile
+    path: Path.normalize(packageFile)
   });
 }
