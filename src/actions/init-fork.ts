@@ -20,32 +20,35 @@ export async function initializeFork() {
   const githubTokenInput = getInput('githubToken', { trimWhitespace: true });
   const octokit = new Octokit({ auth: githubTokenInput });
 
-
   const pkg = await readJsonFile(packageFile);
   if (!isUninitializedPackageJson(pkg)) {
     throw new Error('Cannot initialize template fork.')
   }
+
   const newPkg = Object.assign({}, pkg, pkg['package-template']) as PackageJson;
   delete newPkg['package-template'];
 
-
-
-  const owner = context.repo.owner;
-  const repo = context.repo.repo;
   const path = Path.normalize(packageFile);
+  const repoOwner = context.repo.owner;
+  const repoName = context.repo.repo;
+  const repo = `${repoOwner}/${repoName}`;
+
+  newPkg.name = `@${repo}`;
+  newPkg.version = '0.0.0-dev.0';
+  newPkg.repository = `https://github.com/${repo}`;
 
   const fileDataResult = await octokit.repos.getContent({
-    owner,
-    repo,
-    path
+    owner: repoOwner,
+    repo: repoName,
+    path: Path.normalize(packageFile)
   });
 
   const fileData = fileDataResult.data as { sha: string };
   const sha = fileData.sha;
 
   await octokit.repos.createOrUpdateFileContents({
-    owner,
-    repo,
+    owner: repoOwner,
+    repo: repoName,
     content: Buffer.from(JSON.stringify(newPkg, undefined, 2), 'utf-8').toString('base64'),
     message: 'switched to package-template',
     path,
