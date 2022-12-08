@@ -1,17 +1,15 @@
 import { getInput } from '@actions/core';
-import { initializeFork } from './actions/init-fork';
-
+import { initializeTemplateInstance } from './actions/init-tpl';
 
 enum ACTIONS {
-  INIT_FORK = 'init-fork'
+  INITIALIZE_TEMPLATE_INSTANCE = 'init-tpl'
 }
-
 
 (async () => {
   const action = getInput('action', { trimWhitespace: true }) as ACTIONS;
   switch (action) {
-    case ACTIONS.INIT_FORK:
-      await initializeFork();
+    case ACTIONS.INITIALIZE_TEMPLATE_INSTANCE:
+      await initializeTemplateInstance();
       break;
     default:
       throw new Error(`Unrecognized action '${action}'.`)
