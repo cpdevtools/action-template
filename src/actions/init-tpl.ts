@@ -15,7 +15,7 @@ function isUninitializedPackageJson(obj: any): obj is UninitializedPackageJson {
     && typeof obj['package-template'] === 'object';
 }
 
-export async function initializeFork() {
+export async function initializeTemplateInstance() {
   const packageFile = getInput('packageFile', { trimWhitespace: true, required: true });
   const githubTokenInput = getInput('githubToken', { trimWhitespace: true });
   const octokit = new Octokit({ auth: githubTokenInput });
