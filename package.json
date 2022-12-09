@@ -1,12 +1,27 @@
 {
   "name": "@cpdevtools/action-template",
-  "version": "0.0.1-dev.10",
+  "version": "0.0.1-dev.11",
   "description": "",
   "main": "dist/index.js",
   "repository": "git+https://github.com/cpdevtools/action-template",
   "scripts": {
-    "prepare": "git tag | xargs git tag -d",
-    "build": "ncc build src/index.ts"
+    "prepare": "run-s prepare:*",
+    "prepare:clean-tags": "pnpm run clean-tags",
+    "prepare:husky": "husky install",
+    "prepare:build": "pnpm run build",
+    "pre-commit": "run-s pre-commit:*",
+    "pre-commit:build": "pnpm run build",
+    "pre-commit:tags": "pnpm run clean-tags",
+    "clean-tags": "git tag | xargs git tag -d",
+    "build": "ncc build src/index.ts",
+    "reset-hard": "run-s reset-hard:*",
+    "reset-hard:git-clean": "git clean -dfx && git reset --hard",
+    "reset-hard:install": "pnpm install",
+    "fix": "run-s fix:*",
+    "fix:prettier": "prettier --write --ignore-unknown ."
+  },
+  "lint-staged": {
+    "*": "prettier --write --ignore-unknown"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +30,10 @@
     "@types/node": "^18.11.9",
     "@types/semver": "^7.3.13",
     "@vercel/ncc": "^0.34.0",
+    "husky": "^8.0.2",
+    "lint-staged": "^13.1.0",
+    "npm-run-all2": "^6.0.4",
+    "prettier": "^2.8.1",
     "type-fest": "^3.3.0",
     "typescript": "^4.9.3"
   },
