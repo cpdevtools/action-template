@@ -37,6 +37,10 @@ export async function initializeTemplateInstance() {
   newPkg.version = '0.0.0-dev.0';
   newPkg.repository = `https://github.com/${repo}`;
 
+
+  newPkg.fromTemplate ??= [];
+  (newPkg.fromTemplate as string[]).unshift(`${pkg.name}@${pkg.version}`);
+
   const fileDataResult = await octokit.repos.getContent({
     owner: repoOwner,
     repo: repoName,
